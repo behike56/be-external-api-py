@@ -1,6 +1,5 @@
-version: '3'
 services:
-  demo-app:
+  api:
     build: .
     volumes:
       - .dockervenv:/src/.venv
@@ -8,4 +7,5 @@ services:
     ports:
       - 8000:8000
     environment:
-      - WATCHFULES_FORCE_POLLING=true
+      - WATCHFILES_FORCE_POLLING=true
+    # command: sleep infinity
