@@ -36,10 +36,11 @@
 		"vscode": {
 			// 事前にゲストOS上のVSCodeで利用する拡張をインストールします
 			"extensions": [
-				// 全リポジトリにインストール
+				// Editor補助
 				"EditorConfig.EditorConfig",
 				"johnpapa.vscode-peacock",
 				"ms-ceintl.vscode-language-pack-ja",
+				"ms-azuretools.vscode-docker",
 				// Document
 				"docsmsft.docs-yaml",
 				"yzhang.markdown-all-in-one",
@@ -64,7 +65,12 @@
 			"workbench.iconTheme": "simple-icons",
 			"editor.minimap.enabled": false,
 			"[python]": {
-				"editor.defaultFormatter": "charliermarsh.ruff"
+				"editor.defaultFormatter": "charliermarsh.ruff",
+				"editor.codeActionsOnSave": {
+					"source.fixAll.ruff": "explicit",
+					"source.organizeImports.ruff": "explicit"
+					},
+				"editor.formatOnSave": true
 			},
 			"indentRainbow.colors": [
 				"rgba(247, 37, 133,0.15)",
