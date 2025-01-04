@@ -47,13 +47,19 @@ RUN poetry config virtualenvs.create false
 WORKDIR /workspace
 
 # pyproject.toml / poetry.lock を先にコピーして依存を解決 (開発用依存も含む)
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml* poetry.lock* ./
 RUN poetry install --no-root
+
+# RUN poetry config virtualenvs.in-project true \
+#     && if [ -f pyproject.toml ]; then poetry install --no-root; fi
+# RUN if [ -f pyproject.toml ]; then poetry install --no-interaction --no-ansi; fi
+
+# ENV PATH="/workspace/.venv/bin:$PATH"
 
 # ソースコードをコピー
 COPY . .
 
-# CMDはdocker-compose.yml や devcontainer.json 側で指定 (例: uvicorn --reload)
+# CMDはcompose.yaml側で指定 (例: uvicorn --reload)
 
 
 # ==========================================================
