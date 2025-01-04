@@ -1,37 +1,49 @@
-from http import HTTPStatus as sts
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from http import HTTPStatus as sTs
+from typing import Annotated
 
-import src.api.schemas.task as task_schema
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
 import src.api.cruds.task as task_crud
+import src.api.schemas.task as task_schema
 from src.api.db import get_db
 
 router = APIRouter()
 
 
 @router.get("/tasks", response_model=list[task_schema.Task])
-async def list_tasks(db: Session = Depends(get_db)):
-    return task_crud.get_tasks_with_done(db)
+async def list_tasks(db: Annotated[AsyncSession, Depends(get_db)]) -> list[task_schema.Task]:
+    return await task_crud.get_tasks_with_done(db)
 
 
 @router.post("/tasks", response_model=task_schema.TaskCreateResponse)
 async def create_tasks(
-    task_body: task_schema.TaskCreate, db: Session = Depends(get_db)
-):
-    return task_crud.create_task(db, task_body)
+    task_body: task_schema.TaskCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> task_schema.TaskCreateResponse:
+    return await task_crud.create_task(db, task_body)
 
 
 @router.put("/tasks/{task_id}", response_model=task_schema.TaskCreate)
 async def update_task(
-    task_id: int, task_body: task_schema.TaskCreate, db: Session = Depends(get_db)
-):
-    task = task_crud.get_task(db, task_id=task_id)
+    task_id: int,
+    task_body: task_schema.TaskCreate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> task_schema.TaskCreateResponse:
+    task = await task_crud.get_task(db, task_id=task_id)
     if task is None:
-        raise HTTPException(status_code=sts.NOT_FOUND, detail="Task not found")
-    
-    return task_crud.update_task(db, task_body, original=task)
+        raise HTTPException(status_code=sTs.NOT_FOUND, detail="Task not found")
+
+    return await task_crud.update_task(db, task_body, original=task)
 
 
 @router.delete("/tasks/{task_id}", response_model=None)
-async def delete_task(task_id: int):
-    return
+async def delete_task(
+    task_id: int,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> None:
+    task = await task_crud.get_task(db, task_id=task_id)
+    if task is None:
+        raise HTTPException(status_code=sTs.NOT_FOUND, detail="Task not found")
+
+    return await task_crud.delete_task(db, original=task)
