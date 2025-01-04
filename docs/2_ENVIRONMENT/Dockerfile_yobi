@@ -1,4 +1,4 @@
-# *** Dev Container用のDockerfile ***
+# *** 予備; Dev Container用のDockerfile ***
 FROM python:3.13.1-slim-bookworm
 
 # Linuxの設定
