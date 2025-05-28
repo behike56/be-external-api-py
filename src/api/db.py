@@ -8,7 +8,7 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD", "dev")
 DB_HOST = os.environ.get("DB_HOST", "db")
 DB_NAME = os.environ.get("DB_NAME", "devdb")
 
-DATABASE_URL = f"postgresql+asyncpgc://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
+DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
 
 db_engine = create_async_engine(DATABASE_URL, echo=True)
 db_session = sessionmaker(
